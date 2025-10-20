@@ -3,776 +3,785 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hub de Marketing | SLAP</title>
-    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dqfi22uz0/image/upload/v1749543469/SLAP_FAVICON_AMARELO_coilvj.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <title>SLAP | Oral Test Review</title>
+    <!-- Favicon da SLAP --><link rel="icon" type="image/png" href="https://res.cloudinary.com/dqfi22uz0/image/upload/v1749543469/SLAP_FAVICON_AMARELO_coilvj.png">
+    
+    <!-- Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: DM Sans --><link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Palette: SLAP Brand Colors: #F1D24B (Yellow), #FF5C3D (Orange), #84C7DF (Blue), #8671D1 (Purple) -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* Aplicando a fonte padrão e cores */
         body {
             font-family: 'DM Sans', sans-serif;
-            line-height: 1.25;
+            background-color: #f4f7f9; /* Fundo cinza suave */
+            min-height: 100vh;
         }
-        .nav-item.active {
-            background-color: #FFFBEB; /* yellow-50 */
-            color: #F1D24B;
-            font-weight: 600;
-        }
-        .dropdown-toggle.active-parent {
-            background-color: #f5f5f4; /* stone-100 */
-            color: #44403c; /* stone-700 */
-        }
-        .dropdown-arrow.rotate-180 { transform: rotate(180deg); }
-        .submenu { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .submenu.open { max-height: 500px; }
-
-        /* --- Estilos do Modal (Genérico) --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
-        .modal-overlay.visible { opacity: 1; visibility: visible; }
-        .modal-content { background-color: white; padding: 2rem; border-radius: 0.75rem; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; transform: scale(0.95); transition: transform 0.3s; }
-        .modal-overlay.visible .modal-content { transform: scale(1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e7e5e4; padding-bottom: 1rem; margin-bottom: 1rem; }
-        .modal-header h4 { font-size: 1.25rem; font-weight: 700; color: #44403c; }
-        .modal-close-btn { background: none; border: none; cursor: pointer; color: #a8a29e; }
         
-        /* --- Estilos do Hub de Marketing --- */
-        .kpi-card { background-color: #ffffff; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); text-align: center; border-left-width: 4px; }
-        .kpi-card-blue { border-color: #84C7DF; }
-        .kpi-card-purple { border-color: #8671D1; }
-        .kpi-card-orange { border-color: #FF5C3D; }
-        .kpi-card-yellow { border-color: #F1D24B; }
-        .campaign-card { background-color: #ffffff; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e7e5e4; }
-        .status-tag { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-        .status-active { background-color: #D1FAE5; color: #065F46; }
-        .status-planned { background-color: #DBEAFE; color: #1E40AF; }
-        .status-completed { background-color: #F3F4F6; color: #4B5563; }
-        .brand-color-swatch { width: 100%; height: 80px; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: 600; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-        .persona-card { background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.75rem; padding: 1.5rem; }
-        .resource-link { display: block; background-color: #f9fafb; padding: 1rem; border-radius: 0.5rem; font-weight: 600; color: #4b5563; transition: all 0.2s ease; border-left: 4px solid #d1d5db; }
-        .resource-link:hover { background-color: #f3f4f6; border-color: #F1D24B; color: #1f2937; transform: translateX(4px); }
-        
-        /* --- ESTILOS ATUALIZADOS: Lista de Tarefas --- */
-        .task-card { background-color: #ffffff; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e7e5e4; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
-        .assignee-tag { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem; }
-        .tag-ana { background-color: #FEF3C7; color: #92400E; } /* Amarelo */
-        .tag-bruno { background-color: #DBEAFE; color: #1E40AF; } /* Azul */
-        .tag-carla { background-color: #D1FAE5; color: #065F46; } /* Verde */
-        .tag-daniel { background-color: #EFEBFF; color: #4C1D95; } /* Roxo */
-        .deadline-text { font-weight: 600; color: #57534e; }
-        .deadline-overdue { color: #b91c1c; }
-        .filter-btn { background-color: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; transition: all 0.2s; }
-        .filter-btn:hover { background-color: #e5e7eb; }
-        .filter-btn.active { background-color: #F1D24B; color: #44403c; border-color: #F1D24B; }
+        /* Contêiner principal para centralização e limitação de largura */
+        #main-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
 
-        /* --- ESTILOS: Calendário Semanal --- */
-        .week-container { background-color: #ffffff; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e7e5e4; margin-bottom: 2rem; }
-        .week-header { font-size: 1.5rem; font-weight: 700; color: #44403c; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e7e5e4; }
-        .week-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; }
-        .day-card { background-color: #f9fafb; border-radius: 0.5rem; padding: 1rem; border: 1px solid #f3f4f6; min-height: 150px; cursor: pointer; transition: border-color 0.2s; }
-        .day-card:hover { border-color: #F1D24B; }
-        .day-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
-        .day-name { font-weight: 600; color: #a8a29e; font-size: 0.875rem; }
-        .day-number { font-weight: 700; color: #44403c; font-size: 1.25rem; }
-        .post-item { background-color: #ffffff; border-radius: 0.375rem; padding: 0.5rem; margin-bottom: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); position: relative; }
-        .post-type-tag { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; margin-bottom: 0.25rem; text-transform: uppercase; }
-        .post-tag-stories { background-color: #DBEAFE; color: #1E40AF; }
-        .post-tag-reels { background-color: #EFEBFF; color: #4C1D95; }
-        .post-tag-tiktok { background-color: #F3F4F6; color: #1F2937; }
-        .post-tag-youtube { background-color: #FEE2E2; color: #991B1B; }
-        .post-description { font-size: 0.875rem; color: #57534e; }
-        .delete-btn { position: absolute; top: 4px; right: 4px; background: none; border: none; cursor: pointer; color: #d1d5db; opacity: 0; transition: opacity 0.2s; }
-        .post-item:hover .delete-btn { opacity: 1; }
-        .delete-btn:hover { color: #ef4444; }
-        .form-input { width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem; }
-        .primary-btn { background-color: #F1D24B; color: #44403c; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-weight: 600; transition: background-color 0.2s; }
-        .primary-btn:hover { background-color: #eab308; }
+        /* Primary Action Button Styles (Amarelo SLAP) - Bordas menos arredondadas */
+        .action-button {
+             background-color: #F1D24B; 
+             color: #44403c; /* stone-800 */
+             padding: 0.75rem 1.5rem; 
+             border-radius: 0.75rem; 
+             font-weight: 700; 
+             cursor: pointer; 
+             transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+             display: inline-flex;
+             align-items: center;
+             justify-content: center; 
+             gap: 0.5rem;
+             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .action-button:hover:not(:disabled) {
+            background-color: #eab308; /* Amarelo mais escuro */
+            transform: translateY(-2px);
+        }
+        
+        /* Secondary Button Styles (Escuros) - Bordas menos arredondadas */
+        .secondary-button {
+            background-color: #44403c; /* stone-800 */
+            color: white;
+            padding: 0.75rem 1.5rem; 
+            border-radius: 0.75rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .secondary-button:hover:not(:disabled) {
+            background-color: #292524; /* stone-900 */
+            transform: translateY(-1px);
+        }
+
+        /* Estilo do Card de Nível */
+        .level-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .level-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            border-color: #F1D24B; /* Borda amarela no hover */
+        }
+        
+        /* ESTILO PARA CARD BLOQUEADO */
+        .locked-card-style {
+            opacity: 0.5; /* Opacidade para desabilitado */
+            cursor: not-allowed !important; 
+            pointer-events: none; /* Garante que não é clicável */
+            position: relative; /* Necessário para o overlay */
+        }
+        
+        /* OVERLAY DE 'EM BREVE' (Cadeado) - CORRIGIDO PARA #FF5C3D */
+        .coming-soon-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* Fundo escuro semi-transparente */
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            text-align: center;
+            border: 3px solid #FF5C3D; /* Borda VERMELHA SLAP */
+            color: white;
+            pointer-events: none;
+        }
+        
+        /* Estilo para a Tag CEFR - ROXO SLAP */
+        .cefr-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: #8671d1; /* Roxo SLAP */
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* Estilo para a tela de geração (Modal-like view) */
+        .generator-view-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Estilo para a caixa de pergunta - AZUL SLAP */
+        .question-box {
+            background-color: #eef2ff; /* fundo suave mantido */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border-left: 5px solid #84c7df; /* Azul SLAP para a borda */
+        }
+        
+        /* Classe para aplicar o efeito blur */
+        .question-blurred {
+            filter: blur(8px); 
+            user-select: none;
+            transition: filter 0.3s ease-in-out;
+        }
+
+        /* --- LOGIN GATE STYLES (Copiado do Training Track) --- */
+        #login-gate {
+            background-color: #44403c; /* stone-800 */
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 2rem;
+        }
+        .login-card {
+            background-color: white;
+            color: #44403c;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+        }
+        .login-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+        .login-button {
+            background-color: #F1D24B;
+            color: #44403c;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+        .login-button:hover {
+            background-color: #eab308;
+        }
+
     </style>
 </head>
-<body class="bg-stone-50 text-stone-800">
-
-    <div id="app-container" class="min-h-screen md:flex">
-        
-        <aside class="md:w-64 bg-white md:border-r border-b border-stone-200 p-4 md:p-6 flex flex-col">
-            <div class="mb-6 text-center">
-                <img src="https://res.cloudinary.com/dqfi22uz0/image/upload/v1749349751/DBB440C2-684E-4DCF-9CD3-B2DDC18F1E53_3_vgocga.jpg" alt="Logo SLAP" class="w-24 h-auto mx-auto rounded-lg">
-            </div>
-            <h1 class="text-xl font-bold text-stone-800 mb-6 text-center">Hub de Marketing</h1>
-            <nav id="main-navigation" class="space-y-1 flex-1">
-                <!-- Início (Dashboard) -->
-                <button data-target="inicio" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors flex items-center font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-                    Início
-                </button>
-
-                <!-- Campanhas -->
-                <button data-target="campanhas" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors flex items-center font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2z"></polygon></svg>
-                    Campanhas
-                </button>
-
-                <!-- Lista de Tarefas -->
-                <button data-target="tarefas" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors flex items-center font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-                    Tarefas
-                </button>
-
-                <!-- Calendário de Conteúdo -->
-                <button data-target="calendario" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors flex items-center font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
-                    Calendário
-                </button>
-
-                <!-- Analytics -->
-                <button data-target="analytics" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors flex items-center font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M3 3v18h18"/><path d="M18.7 8a6 6 0 0 0-6-6"/><path d="M13 13a6 6 0 0 0 6-6"/></svg>
-                    Analytics
-                </button>
-
-                <!-- Estratégia (Dropdown) -->
-                <div class="nav-dropdown">
-                    <button class="nav-item dropdown-toggle w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors flex items-center justify-between font-semibold">
-                        <span class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9.09 9.09 5.82 5.82"/><path d="m14.91 9.09-5.82 5.82"/></svg>
-                            Estratégia
-                        </span>
-                        <svg class="dropdown-arrow w-4 h-4 transition-transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="submenu pl-6 mt-1 space-y-1">
-                        <button data-target="manual-marca" class="nav-item submenu-item w-full text-left px-4 py-2 rounded-lg text-stone-600 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors">Manual da Marca</button>
-                        <button data-target="personas" class="nav-item submenu-item w-full text-left px-4 py-2 rounded-lg text-stone-600 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors">Personas</button>
-                    </div>
-                </div>
-
-                <!-- Recursos -->
-                <button data-target="recursos" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-yellow-50 hover:text-[#F1D24B] transition-colors flex items-center font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
-                    Recursos
-                </button>
-            </nav>
-            <div class="mt-4">
-                <a href="#" id="logout-button" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-stone-700 hover:bg-red-50 hover:text-red-600 transition-colors flex items-center font-semibold">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    Sair
-                </a>
-            </div>
-        </aside>
+<body>
     
-        <main class="flex-1 p-4 sm:p-6 md:p-8">
-            <header id="main-header" class="mb-8">
-                <h2 id="main-title" class="text-3xl font-bold text-[#F1D24B]"></h2>
-                <p id="main-description" class="mt-2 text-stone-600"></p>
-            </header>
+    <!-- LOGIN GATE (Copiado do Training Track) -->
+    <div id="login-gate">
+        <div class="login-card text-center">
+            <h1 class="text-3xl font-bold mb-4 text-[#8671d1]">SLAP Oral Test Review</h1>
+            <p class="text-lg font-medium mb-6">Adivinhe a língua que eu estou pensando:</p>
             
-            <div id="content-area">
-                <!-- Conteúdo será injetado aqui dinamicamente -->
-            </div>
-        </main>
-    </div>
-
-    <!-- Modal Genérico -->
-    <div id="form-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 id="form-modal-title"></h4>
-                <button class="modal-close-btn" onclick="closeFormModal()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <form id="login-form" onsubmit="checkPassword(event)">
+                <label for="password-input" class="block text-left font-semibold text-sm mb-1">
+                    Senha (em minúsculas):
+                </label>
+                <input 
+                    type="password" 
+                    id="password-input" 
+                    class="login-input" 
+                    placeholder="Ex: inglês" 
+                    required
+                >
+                <button type="submit" class="login-button">
+                    Entrar
                 </button>
-            </div>
-            <form id="form-modal-body" class="space-y-4"></form>
+                <p id="login-feedback" class="mt-4 text-red-600 hidden font-bold">Senha incorreta. Tente novamente!</p>
+            </form>
         </div>
     </div>
 
-    <script type="module">
-        // Importações do Firebase
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- VARIÁVEIS GLOBAIS ---
-        const contentArea = document.getElementById('content-area');
-        const mainHeader = document.getElementById('main-header');
-        let currentChart;
+    <div id="main-wrapper" class="hidden">
+        
+        <!-- HEADER (Logo e Título) --><header class="py-6 border-b border-stone-200 mb-8">
+            <img src="https://res.cloudinary.com/dqfi22uz0/image/upload/v1759294967/SLAP_TIPO_PRETO_2_kismg9.png" alt="SLAP Logo Preto" class="w-32 h-auto mx-auto mb-2">
+            
+            <h1 class="text-3xl font-bold text-center text-stone-800">Oral Test Review</h1>
+            <p class="text-center text-stone-500">Ferramenta de revisão para Oral Test</p>
+        </header>
 
-        // Variáveis de estado para os dados do Firestore
-        let db, auth, userId;
-        let tasks = [];
-        let campaigns = [];
-        let calendarEvents = {}; // Agora um objeto para agrupar por data
-        let unsubscribeTasks, unsubscribeCampaigns, unsubscribeCalendar; // Para limpar os listeners
+        <!-- DASHBOARD VIEW --><div id="dashboard-view" class="w-full">
+            <h2 class="text-xl font-semibold text-stone-700 mb-6">Selecione o Nível da Turma:</h2>
+            
+            <div id="level-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Cards serão injetados aqui pelo JS -->
+            </div>
+        </div>
 
-        // --- CONFIGURAÇÃO E INICIALIZAÇÃO DO FIREBASE ---
-        async function initializeFirebase() {
-            try {
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'hub-marketing-slap';
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        <!-- GENERATOR VIEW (Inicialmente oculta) --><div id="generator-view" class="hidden w-full">
+            <!-- Botão Voltar ao Dashboard - ICONE 30X30 --><button class="secondary-button mb-6" onclick="showDashboard()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                Voltar ao Dashboard
+            </button>
 
-                if (!firebaseConfig.apiKey) {
-                    console.error("Configuração do Firebase não encontrada. O app funcionará com dados locais.");
-                    loadMockData(); // Carrega dados locais se o Firebase não estiver configurado
-                    renderInicioSection();
-                    setActiveNavItem(document.querySelector('[data-target="inicio"]'));
-                    return;
-                }
-
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        console.log("Usuário autenticado:", userId);
-                        // Inicia os listeners para os dados do Firestore
-                        setupFirestoreListeners(appId);
-                    } else {
-                        // Se não houver usuário, tenta autenticação anônima
-                        signInAnonymously(auth).catch(error => console.error("Erro na autenticação anônima:", error));
-                    }
-                });
+            <div class="generator-view-container">
+                <!-- Cor do display do nível alterada para Azul SLAP --><h2 class="text-3xl font-bold text-stone-800 mb-4">Let's Talk: <span id="current-level-display" class="text-[#84c7df]"></span></h2>
                 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                <!-- CAIXA DA PERGUNTA --><div class="question-box mb-8">
+                    <!-- Flex container para o título e botão de visibilidade --><div class="flex justify-between items-start">
+                        <p class="text-sm font-semibold text-indigo-700 mb-2">PERGUNTA ORAL:</p>
+                        <!-- BOTÃO DE VISIBILIDADE --><button id="toggle-visibility-btn" class="p-1 text-stone-500 hover:text-stone-800 transition duration-150 rounded-full" onclick="toggleQuestionVisibility()">
+                            <!-- Icone inicial (Olho aberto) - Será preenchido pelo JS --><svg id="eye-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
 
-            } catch (error) {
-                console.error("Erro ao inicializar o Firebase:", error);
-                loadMockData();
-                renderInicioSection();
-                setActiveNavItem(document.querySelector('[data-target="inicio"]'));
+                    <!-- Aplicação de blur via JS --><p id="main-question" class="text-2xl font-bold text-indigo-900">Clique para gerar sua primeira pergunta...</p>
+                    
+                </div>
+
+                <!-- RESPOSTA MODELO E FOLLOW-UPS --><div id="additional-info-area" class="space-y-6">
+                    <!-- Resposta Modelo (Oculta por padrão) --><div id="example-answer-container" class="hidden p-4 rounded-lg bg-yellow-50 border-l-4 border-[#F1D24B]">
+                        <p class="font-bold text-stone-800 mb-2">RESPOSTA MODELO:</p>
+                        <p id="example-answer" class="text-stone-700 italic">Placeholder de resposta modelo.</p>
+                    </div>
+
+                    <!-- Follow-Up Questions (Oculto por padrão) --><div id="follow-up-container" class="hidden p-4 rounded-lg bg-stone-100 border-l-4 border-stone-400">
+                        <p class="font-bold text-stone-800 mb-2">PERGUNTAS DE ACOMPANHAMENTO:</p>
+                        <ul id="follow-up-list" class="list-disc list-inside text-stone-700 space-y-1 ml-4">
+                            <!-- Follow-ups serão injetados aqui -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- BOTÕES DE AÇÃO --><div class="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
+                    <!-- Botão Secundário (See Example Answer) - ICONE 30X30 --><button class="secondary-button w-full sm:w-auto" onclick="showExampleAnswer()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                        See Example Answer
+                    </button>
+                    <!-- Botão Follow-Up - ROXO SLAP. ICONE 30X30 --><button class="w-full sm:w-auto px-6 py-3 bg-[#8671d1] text-white font-bold rounded-xl shadow-md hover:bg-[#6c59b8] transition duration-200 flex items-center justify-center gap-2" onclick="generateFollowUps()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                        Follow-Up Questions
+                    </button>
+                    <!-- Botão Principal: Gerar Nova Pergunta (Amarelo SLAP) - ICONE ATUALIZADO PARA SETA/FORWARD --><button class="action-button w-full sm:w-auto" onclick="generateRandomQuestion()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        Gerar Nova Pergunta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <script>
+        // --- CONSTANTES E ESTADO GLOBAL ---
+        let currentLevel = null;
+        let questionsPool = []; // Pool de perguntas restantes na sessão atual (evita repetição)
+        let currentQuestion = null; // PERGUNTA ATUALMENTE EXIBIDA
+        let isQuestionVisible = true; // Estado da visibilidade
+
+        // Icon Paths (Lucide Icons SVG)
+        const eyeOpenPath = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>`; 
+        const eyeOffPath = `<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.04 13.04 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>`;
+        
+        // Logo da Escola para os Cards
+        const schoolLogoHtml = `<img src="https://res.cloudinary.com/dqfi22uz0/image/upload/v1760657894/SLAP_ICON_PRETO_2_2_tv8bmp.png" alt="Logo da Escola" class="absolute top-4 right-4 w-8 h-8 pointer-events-none" onerror="this.style.display='none';" />`;
+
+        // Estrutura de dados para o Gerador
+        const levelData = {
+            'Starter 1': {
+                cefr_tag: 'Pré-A1',
+                range: 'Pré-A1',
+                questions: [
+                    { q: "How are you doing today?", topic: "Feelings & Greetings", ans: "I'm doing well, thank you! I'm happy.", followUps: ["What makes you feel tired?", "Do you like the weather today?", "What is a good adjective to describe your mood?"] },
+                    { q: "What’s your first name and last name?", topic: "Names & Basics", ans: "My first name is [First Name] and my last name is [Last Name].", followUps: ["Do you have a nickname?", "How do you greet your friends?"] },
+                    { q: "Can you spell your name for me, please?", topic: "Spelling", ans: "Yes, I spell my name J-O-H-N.", followUps: ["Can you spell the name of this class (SLAP)?", "Is spelling difficult?"] },
+                    { q: "How old are you now?", topic: "Numbers & Age", ans: "I am 22 years old.", followUps: ["What is your favorite number?", "How old is your sister/brother?"] },
+                    { q: "What month is your birthday in?", topic: "Months & Holidays", ans: "My birthday is in July.", followUps: ["What is the next month?", "Is Christmas in December?"] },
+                    { q: "What city do you live in?", topic: "Verb To Be & Location", ans: "I live in [City Name]. It is a big city.", followUps: ["Is your city beautiful?", "Where are you from exactly?"] },
+                    { q: "Are you Brazilian? Where are you from exactly?", topic: "Countries & Nationalities", ans: "Yes, I am Brazilian. I am from São Paulo.", followUps: ["Is your teacher American?", "What is the capital of Brazil?"] },
+                    { q: "Do you have a phone number? What is it?", topic: "Numbers & Possessives", ans: "Yes, I have a phone number. It is 555-1234.", followUps: ["What is your favorite color?", "Is this phone yours (pointing)?"] },
+                    { q: "What time do you usually wake up?", topic: "Simple Present & Routine", ans: "I usually wake up at 7:00 AM.", followUps: ["Do you wake up early on weekends?", "What do you do after you wake up?"] },
+                    { q: "What time do you go to bed?", topic: "Simple Present & Hours", ans: "I go to bed at 11:00 PM.", followUps: ["Is it difficult to sleep early?", "What time does this class finish?"] },
+                    { q: "Describe yourself using three words.", topic: "Basic Adjectives", ans: "I am tall, quiet, and friendly.", followUps: ["What is one thing you are good at?", "Are you more active or calm?"] },
+                    { q: "What do you usually do after work or school?", topic: "Simple Present & Routine", ans: "I watch TV and I study English.", followUps: ["Who do you watch TV with?", "Do you like your job/school?"] },
+                    { q: "Tell me something about your neighborhood. Is it quiet or noisy?", topic: "Neighborhood", ans: "My neighborhood is noisy because there is a park.", followUps: ["Is there a good restaurant near your house?", "Do you like living there?"] },
+                    { q: "Which sports do you like playing?", topic: "Likes and Dislikes", ans: "I like playing volleyball, but I can't play soccer.", followUps: ["Can you swim well?", "What sport do you hate watching?"] },
+                    { q: "What foods can you cook well?", topic: "Food & Can", ans: "I can cook rice and beans well.", followUps: ["Can you eat the skin of an apple?", "What is your favorite fruit?"] },
+                    { q: "What’s your favorite holiday or celebration?", topic: "Months & Holidays", ans: "My favorite holiday is Christmas.", followUps: ["When do people celebrate Christmas?", "Do you like presents?"] },
+                    { q: "When do people celebrate this holiday?", topic: "Months & Holidays", ans: "They celebrate it on December 25th.", followUps: ["Do you like the month of December?"] },
+                    { q: "What do you and your family usually do on that day?", topic: "Simple Present & Family", ans: "We eat a big dinner and exchange gifts.", followUps: ["Who is your favorite family member?", "Do you see them often?"] },
+                    { q: "What does your best friend do on weekends?", topic: "Simple Present & Free Time", ans: "She goes shopping and visits her parents.", followUps: ["What do you do together?", "Does she like her routine?"] },
+                    { q: "What do your parents do in their free time?", topic: "Simple Present & Free Time", ans: "They read books and watch movies.", followUps: ["Do they like reading fiction or non-fiction?", "Do you join them sometimes?"] },
+                ],
+                followUps: ["Do you have a nickname?", "Is [Student Name] an English name?", "How do you spell your best friend's name?"],
+            },
+            'Starter 2': {
+                cefr_tag: 'A1',
+                range: 'A1',
+                questions: [
+                    { q: "What are you doing right now in class?", topic: "Present Continuous", ans: "I'm talking to you and I'm learning English.", followUps: ["Is your teacher standing up?", "What is your friend wearing now?"] },
+                    { q: "Is it hot, cold, or rainy today?", topic: "Weather", ans: "It is a little cold today.", followUps: ["What clothes are you wearing because it's cold?", "Do you like hot or cold weather?"] },
+                    { q: "What’s the weather going to be like tomorrow, do you think?", topic: "Future Simple (Will)", ans: "I think it will be sunny tomorrow.", followUps: ["Will you go to the beach if it's sunny?", "What will you wear?"] },
+                    { q: "What’s a dish you really enjoy eating?", topic: "Food & Tastes", ans: "I enjoy eating lasagna. It tastes delicious.", followUps: ["How does your favorite food taste?", "Who cooks lasagna for you?"] },
+                    { q: "How does your favorite food taste?", topic: "Tastes", ans: "It tastes sweet and salty.", followUps: ["What is a salty snack you like?", "What is the opposite of sweet?"] },
+                    { q: "What are you planning to eat tonight?", topic: "Future Plans (Will)", ans: "I will eat a sandwich tonight.", followUps: ["Who will prepare the sandwich?", "Will you eat fast food next weekend?"] },
+                    { q: "Do you usually eat at home or go out to eat?", topic: "Routine & Restaurant", ans: "I usually eat at home because it is cheaper.", followUps: ["What is your favorite restaurant?", "Do you agree that eating out is expensive?"] },
+                    { q: "What’s a place you love going to on weekends?", topic: "Places In Town", ans: "I love going to the city park on Saturdays.", followUps: ["What do you do there?", "Do you take the bus or go on foot?"] },
+                    { q: "What do you do for a living or what’s your job?", topic: "Occupations", ans: "I am a marketing analyst.", followUps: ["Do you like your job?", "Is your father a teacher?"] },
+                    { q: "Tell me about your daily routine.", topic: "Routine", ans: "I wake up at 6, take a shower, and go to work.", followUps: ["What time do you have lunch?", "Do you like your routine?"] },
+                    { q: "Do you like your routine or would you change something?", topic: "Likes/Dislikes & Routine", ans: "I like it, but I would change my wake-up time to 8:00 AM.", followUps: ["Why would you change that time?", "What is the most boring part of your routine?"] },
+                    { q: "How many days a week do you study or work?", topic: "Frequency", ans: "I work five days a week, from Monday to Friday.", followUps: ["Do you always work/study hard?", "How often do you relax?"] },
+                    { q: "How do you go to school or work — by car, bus, or on foot?", topic: "In, On, At + Transportations", ans: "I go to work on the bus.", followUps: ["What time do you arrive at work?", "Do you prefer travelling by train?"] },
+                    { q: "Where do you live — in a house or in an apartment building?", topic: "Parts Of The House", ans: "I live in an apartment building.", followUps: ["How many rooms are in your apartment?", "Is it big or small?"] },
+                    { q: "Do you think apartments are better than houses? Why?", topic: "Opinions & Reasons", ans: "Yes, apartments are safer because I don't have to worry about the garden.", followUps: ["What is one thing a house has that an apartment doesn't?"] },
+                    { q: "Describe your house or apartment for me.", topic: "Furniture & Parts of the House", ans: "My apartment is small, but it has a big kitchen and a comfortable sofa.", followUps: ["What furniture is in your bedroom?", "Do you help with the chores?"] },
+                    { q: "What household chores do you usually do?", topic: "Furniture & Chores", ans: "I have to wash the dishes and clean the floor.", followUps: ["Do you agree that cleaning is boring?", "Who helps you with the chores?"] },
+                    { q: "Who do you live with? What does this person look like?", topic: "Describing People & Family", ans: "I live with my mother. She is tall, has short hair, and is very kind.", followUps: ["Is she patient?", "What is her favorite color?"] },
+                    { q: "What kind of movies do you like?", topic: "Movie Genres", ans: "I like action movies and comedies.", followUps: ["Who is your favorite actor?", "Do you prefer watching movies at home or in the cinema?"] },
+                    { q: "Do you like movies about superheroes or do you prefer romantic ones?", topic: "Movie Genres & Likes/Dislikes", ans: "I prefer superhero movies because romantic movies are boring.", followUps: ["What movie genre do you hate?", "Who do you usually watch movies with?"] },
+                ],
+                followUps: ["Who do you usually go to the park with?", "What's your favourite room in the house?", "Do you cook your favorite dish?"],
+            },
+            'Freshman 1': {
+                cefr_tag: 'Low A2',
+                range: 'A2',
+                questions: [
+                    { q: "What did you do last weekend?", topic: "Simple Past", ans: "I went to the beach with my family and we ate ice cream.", followUps: ["Did you drive or take the bus?", "What did you eat for lunch?"] },
+                    { q: "Can you tell me about a special day you remember?", topic: "Simple Past & Memory", ans: "I remember my last birthday party. It was a great day!", followUps: ["Where was the party?", "Who was there?"] },
+                    { q: "What makes you feel really happy?", topic: "Feelings & Reasons", ans: "Spending time with my friends makes me feel happy.", followUps: ["What makes you feel sad?", "Why is it important to be happy?"] },
+                    { q: "What were you like as a child?", topic: "Simple Past & Description", ans: "I was very shy, but I was also very curious.", followUps: ["Were you taller than your friends?", "Did you like to draw?"] },
+                    { q: "What things did you enjoy doing when you were little?", topic: "Simple Past & Likes", ans: "I enjoyed playing hide-and-seek and watching cartoons.", followUps: ["What is one cartoon you don't like anymore?"] },
+                    { q: "Can you describe your physical appearance?", topic: "Physical Description", ans: "I am medium height, I have black hair, and I wear glasses.", followUps: ["What does your teacher look like?", "Who in your family looks like you?"] },
+                    { q: "What does your teacher look like?", topic: "Physical Description", ans: "She is tall and has long, brown hair.", followUps: ["What color are her eyes?", "Is she older than you?"] },
+                    { q: "Who in your family looks most like you?", topic: "Physical Description & Comparatives", ans: "I look most like my mother, but I am taller than her.", followUps: ["Do you have the same hair color as your mother?"] },
+                    { q: "If your friend is sick, what do you tell them to do?", topic: "Advice & Modals", ans: "I tell them, \"You should drink a lot of water and rest.\"", followUps: ["Should they go to work/school?", "What shouldn't they eat?"] },
+                    { q: "I have a headache — what’s your advice?", topic: "Advice & Health", ans: "You should take some medicine and relax to help your head.", followUps: ["Should I stay home?", "What medicine do you recommend?"] },
+                    { q: "What time do you wake up on Sundays?", topic: "Routine & Time", ans: "I wake up late, at 10:00 AM, on Sundays.", followUps: ["What do you do immediately after waking up?", "What time did you wake up today?"] },
+                    { q: "What time did you go to bed last night?", topic: "Simple Past & Time", ans: "I went to bed at 11:30 PM last night.", followUps: ["Did you sleep well?", "What do you do before you sleep?"] },
+                    { q: "Where do you usually buy your clothes?", topic: "Places & Routine", ans: "I usually buy my clothes at the mall or online.", followUps: ["Do you spend a lot of money on clothes?", "What's your favorite store?"] },
+                    { q: "Do you spend a lot of time watching TV?", topic: "Routine & Frequency", ans: "No, I don't. I rarely watch TV, maybe once a week.", followUps: ["What do you do instead of watching TV?", "Who do you know that watches too much TV?"] },
+                    { q: "Who do you know that watches too much TV?", topic: "Simple Present & People", ans: "My uncle watches too much TV. He watches all day!", followUps: ["What is his favorite show?", "Is watching TV good or bad?"] },
+                    { q: "What kind of food do you usually eat — healthy or not?", topic: "Food & Health", ans: "I usually try to eat healthy food, like salads and chicken.", followUps: ["What advice would you give to someone who wants to be healthier?"] },
+                    { q: "What advice would you give to someone who wants to be healthier?", topic: "Advice & Modals", ans: "They should eat more vegetables and shouldn't eat fast food every day.", followUps: ["Should they exercise?", "What is the healthiest meal of the day?"] },
+                    { q: "What makes you angry sometimes?", topic: "Feelings & Reasons", ans: "Traffic makes me angry sometimes.", followUps: ["What do you do when you are angry?", "Are you usually calm?"] },
+                    { q: "Are you more emotional or more logical?", topic: "Personality & Comparatives", ans: "I think I am more logical than emotional.", followUps: ["Is your friend more emotional?", "What is a logical way to solve a problem?"] },
+                    { q: "Does anyone in your family speak another language?", topic: "Family & Languages", ans: "Yes, my mother speaks Spanish.", followUps: ["Do you want to learn Spanish too?", "How many languages can you speak?"] },
+                ],
+                followUps: ["Did you go out last night?", "What is the best restaurant near your house?", "What kind of music helps you relax?"],
+            },
+            'Freshman 2': {
+                cefr_tag: 'High A2',
+                range: 'A2+',
+                questions: [
+                    { q: "What were you doing an hour ago?", topic: "Past Continuous", ans: "I was having dinner and watching the news an hour ago.", followUps: ["What news were you watching?", "Were you talking to someone?"] },
+                    { q: "What would you buy if you had a lot of money right now?", topic: "Second Conditional", ans: "If I had a lot of money, I would buy a big house near the beach.", followUps: ["Would you still work?", "Would you travel the world?"] },
+                    { q: "Should rich people help poor people, in your opinion?", topic: "Modals & Opinions", ans: "Yes, they should help because they have the means to do it.", followUps: ["How can they help effectively?", "Is it a government job?"] },
+                    { q: "Would you like to live in another country someday?", topic: "Second Conditional & Future Plans", ans: "Yes, I would. I would live in Canada because I like cold weather.", followUps: ["Where would you live exactly?", "What job would you look for there?"] },
+                    { q: "What were you doing last night at 8 p.m.?", topic: "Past Continuous", ans: "I was studying for my English test last night at 8 p.m.", followUps: ["What subject were you studying?", "Was it difficult?"] },
+                    { q: "What things couldn’t you do when you were a child?", topic: "Past Modals (Could/Couldn't)", ans: "I couldn't drive a car, and I couldn't cook.", followUps: ["Can you cook now?", "What is one thing you can do now that you couldn't do before?"] },
+                    { q: "Did you like school when you were younger? Why or why not?", topic: "Simple Past & Opinions", ans: "Yes, I liked school because I could see my friends every day.", followUps: ["What was your favorite subject?", "What did you use to do after school?"] },
+                    { q: "How was your life during the pandemic?", topic: "Simple Past & Experiences", ans: "It was difficult. I stayed home most of the time.", followUps: ["Did you study online?", "What was the biggest change for you?"] },
+                    { q: "Did you stay home most of the time in 2020?", topic: "Simple Past & Frequency", ans: "Yes, I did. I only went out to go to the supermarket.", followUps: ["Did you start any new hobbies during that time?"] },
+                    { q: "What habits did you stop doing after the pandemic?", topic: "Simple Past & Habits", ans: "I stopped watching TV all day and started exercising.", followUps: ["What exercise do you do?", "Do you feel healthier now?"] },
+                    { q: "Is there something you used to love but don’t anymore?", topic: "Used To", ans: "I used to love playing video games, but now I prefer reading.", followUps: ["Why did you stop playing?", "What kind of books do you read?"] },
+                    { q: "What are you used to doing every morning?", topic: "Used To (Be used to)", ans: "I am used to drinking coffee immediately when I wake up.", followUps: ["Is it difficult to change a routine?", "Are you used to speaking English now?"] },
+                    { q: "What’s one thing you must do even when you’re tired?", topic: "Modals (Must)", ans: "I must wash the dishes even when I’m tired.", followUps: ["Why must you do this chore?", "What is one thing you mustn't forget?"] },
+                    { q: "What’s something importante you need to do this week?", topic: "Modals (Need to)", ans: "I need to finish a big project for my job/school this week.", followUps: ["What happens if you don't finish it?", "When will you start working on it?"] },
+                    { q: "Can you talk about a situation that changed your life?", topic: "Past Events & Narrative", ans: "Learning English changed my life because I got a new job.", followUps: ["When did you start learning English?", "What job did you get?"] },
+                    { q: "Do you think English is a hard language?", topic: "Opinions & Comparatives", ans: "No, I don't think it's hard, but it is harder than Spanish.", followUps: ["What is the hardest part of learning English?"] },
+                    { q: "Who’s a person you admire and why?", topic: "Description & Reasons", ans: "I admire my grandmother because she is very strong and resilient.", followUps: ["What qualities does she have?", "Do you want to be like her?"] },
+                    { q: "Who do people say you look like?", topic: "Physical Description & Appearance", ans: "People say I look like my father, but I think I look more like my mother.", followUps: ["Do you agree with them?", "What is the biggest difference in appearance?"] },
+                    { q: "Do you get along well with that person (the person you look like)?", topic: "Relationships & Family", ans: "Yes, I get along very well with my mother. We talk every day.", followUps: ["Do you argue often?", "What do you do together?"] },
+                    { q: "Do you think fast when you’re in a stressful situation?", topic: "Opinions & Description", ans: "Yes, I think fast, but sometimes I get too nervous.", followUps: ["What is a common stressful situation for you?", "What do you do to relax?"] },
+                ],
+                followUps: ["What kind of food did you use to hate?", "Which country has the best food, in your opinion?", "Which city are you going to live in Canada?"],
+            },
+            'Sophomore 1': {
+                cefr_tag: 'Low B1',
+                range: 'B1',
+                questions: [
+                    { q: "What’s something you have to do every day or every week?", topic: "Modals (Have to)", ans: "I have to check all my emails every day for work.", followUps: ["What happens if you don't check your emails?", "What chore do you have to do?"] },
+                    { q: "What’s something you might do this weekend?", topic: "Modals (Might) & Future", ans: "I might go to the beach, but it depends on the weather.", followUps: ["Where would you go if you couldn't go to the beach?"] },
+                    { q: "How much free time do you usually have?", topic: "Quantity (Much/Many)", ans: "I don't have much free time, maybe two hours a day.", followUps: ["Do you have many hobbies?", "How do you manage your time?"] },
+                    { q: "How was your weekend? What did you do?", topic: "Simple Past & Narrative", ans: "My weekend was great! I visited a new museum in the city.", followUps: ["What was the most interesting exhibit?", "Who did you go with?"] },
+                    { q: "What’s something you like doing with your friends?", topic: "Likes/Dislikes & Activities", ans: "We like going out to eat and discussing movies.", followUps: ["Where is your favorite place to eat out?"] },
+                    { q: "Do you like eating out or cooking at home?", topic: "Likes/Dislikes & Food", ans: "I prefer cooking at home because it is cheaper and healthier.", followUps: ["What dish do you cook best?", "What restaurant do you recommend?"] },
+                    { q: "Are you good at managing your money?", topic: "Skills & Money", ans: "Yes, I am. I try to save more money than I spend.", followUps: ["Do you use an app to track your expenses?"] },
+                    { q: "Do you save money or spend it quickly?", topic: "Money & Frequency", ans: "I try to save money, but I spend it quickly on clothes.", followUps: ["What is one thing you want to buy soon?", "What is a better investment?"] },
+                    { q: "When you buy something expensive, do you plan or buy impulsively?", topic: "Habits & Planning", ans: "I always plan and research before buying something expensive.", followUps: ["What is the most expensive thing you bought recently?"] },
+                    { q: "What’s something you really want to do before you die?", topic: "Bucket List & Future Plans", ans: "I really want to travel to all the continents.", followUps: ["Which continent would you visit first?", "What is the most important goal in your life?"] },
+                    { q: "What’s your favorite kind of food and why?", topic: "Food & Reasons", ans: "My favorite food is Mexican because it is spicy and full of flavor.", followUps: ["What food do you recommend everyone try?"] },
+                    { q: "What’s a TV show you recommend?", topic: "Recommendations", ans: "I recommend 'Black Mirror' because it makes you think.", followUps: ["Why do you like that genre?", "Is the show popular?"] },
+                    { q: "Which movie or TV show do you think is overrated?", topic: "Opinions & Comparatives", ans: "I think 'Game of Thrones' is overrated; it's too slow.", followUps: ["What is a show that is definitely *not* overrated?"] },
+                    { q: "How often do you watch TV or movies?", topic: "Frequency", ans: "I watch movies almost every day, but not TV shows.", followUps: ["What time do you usually watch?", "What do you do if you don't like a movie?"] },
+                    { q: "When you stay at a hotel, what kind of room do you prefer?", topic: "Preferences & Travel", ans: "I prefer a room with a view of the city or the ocean.", followUps: ["What is the best hotel you have stayed at?"] },
+                    { q: "Have you ever ordered room service? Was it worth it?", topic: "Past Experience & Travel", ans: "Yes, I have. It was convenient, but it was too expensive.", followUps: ["What did you order?", "Was the food good?"] },
+                    { q: "What should someone do if they lose their passport on a trip?", topic: "Modals (Should) & Advice", ans: "They should contact the embassy immediately.", followUps: ["What documents mustn't you lose?", "Should you report it to the police?"] },
+                    { q: "I feel very tired during the week — what’s your advice?", topic: "Advice & Modals", ans: "You should try to sleep eight hours a night and drink more water.", followUps: ["What shouldn't I drink?", "Should I take a break from work?"] },
+                    { q: "What mustn’t you take in your carry-on bag at the airport?", topic: "Modals (Mustn't) & Travel", ans: "You mustn't take sharp objects or liquids over 100ml.", followUps: ["What must you take?", "Do you like travelling by plane?"] },
+                    { q: "What might happen if you forget your charger on a trip?", topic: "Conditionals & Future", ans: "You might not be able to use your phone, so you should buy a new one.", followUps: ["What is one thing you *always* forget?"] },
+                ],
+                followUps: ["What is one thing you can't afford right now?", "What is the next big purchase you want to make?", "What makes 'The Hobbit' so special?"],
+            },
+            'Sophomore 2': {
+                cefr_tag: 'High B1',
+                range: 'B1+',
+                questions: [
+                    { q: "Have you ever gone to a festival or a live show? How was it?", topic: "Present Perfect & Experience", ans: "Yes, I have. I went to Rock in Rio last year, and it was amazing.", followUps: ["Who did you go with?", "What was the best part of the festival?"] },
+                    { q: "Have you ever traveled to another state or country? Tell me about it.", topic: "Present Perfect & Travel", ans: "Yes, I have traveled to Argentina. I went to Buenos Aires two years ago.", followUps: ["What did you see there?", "What language do they speak?"] },
+                    { q: "How long have you been living in your current home?", topic: "Present Perfect Continuous", ans: "I have been living here for about five years.", followUps: ["Do you like your neighborhood?", "Do you plan to move soon?"] },
+                    { q: "How did you meet your closest friends?", topic: "Simple Past & Narrative", ans: "I met them in college on the first day of class.", followUps: ["What do you usually do together?", "What makes a good friend?"] },
+                    { q: "Has this year been a good one for you? Why?", topic: "Present Perfect & Opinion", ans: "Yes, it has. I have learned a lot and saved some money.", followUps: ["What is the best thing that has happened this year?", "What do you still want to achieve?"] },
+                    { q: "What’s something you did recently that was really easy for you?", topic: "Simple Past & Ability", ans: "I organized my whole apartment, and it was surprisingly easy.", followUps: ["What is one thing that is difficult for you?"] },
+                    { q: "What’s the most exotic food you’ve ever tried?", topic: "Superlatives & Food", ans: "The most exotic food I've tried is crocodile meat in Thailand.", followUps: ["Did you like it?", "What is the strangest food in your culture?"] },
+                    { q: "Do you think English is getting easier for you now?", topic: "Present Continuous", ans: "Yes, I think it is. I am understanding movies better now.", followUps: ["What is the hardest part of learning English?"] },
+                    { q: "How have you been studying English these days?", topic: "Present Perfect Continuous", ans: "I have been watching English series and reading books.", followUps: ["How long have you been doing that?", "What challenges have you been facing?"] },
+                    { q: "Have you discovered any new movies or series lately?", topic: "Present Perfect & Entertainment", ans: "Yes, I have. I discovered a new thriller series on Netflix last week.", followUps: ["Is it good?", "Who stars in it?"] },
+                    { q: "Is there something you haven’t done yet but want to?", topic: "Present Perfect & Goals", ans: "I haven't traveled to Europe yet, but I really want to go next year.", followUps: ["Which country would you visit first?"] },
+                    { q: "Do you think men and women are treated equally at work?", topic: "Opinions & Social Issues", ans: "No, they are not. Women are often paid less for the same job.", followUps: ["What should be done to fix this?", "Is the situation getting better?"] },
+                    { q: "How can education help reduce inequality?", topic: "Modals & Social Issues", ans: "Education can help by providing equal opportunities to everyone.", followUps: ["Should education be free?", "How can we improve our local schools?"] },
+                    { q: "Tell me about a time you had to do something difficult.", topic: "Modals (Had to) & Narrative", ans: "I had to present a huge project to the company's board last month.", followUps: ["How did you feel?", "Was the presentation successful?"] },
+                    { q: "Can you think of a bad situation that turned out to be good?", topic: "Past Events & Perspective", ans: "Losing my job was bad, but it made me start my own business, which is good.", followUps: ["What did you learn from that experience?"] },
+                    { q: "Would you rather travel to the past or to the future? Why?", topic: "Preferences & Second Conditional", ans: "I'd rather travel to the future because I'm curious about technology.", followUps: ["What is one question you would ask people in the future?"] },
+                    { q: "What behavior do you think is rude in your culture but not in others?", topic: "Culture & Customs", ans: "Arriving late is considered rude in my culture, but not everywhere.", followUps: ["What is a polite behavior in your culture?"] },
+                    { q: "Do you use any AI tools in your routine? For what purpose?", topic: "Technology & Routine", ans: "Yes, I use ChatGPT to write emails faster.", followUps: ["Do you think it is cheating?", "What is the best use of AI?"] },
+                    { q: "Do you think artificial intelligence is dangerous?", topic: "Opinions & Technology", ans: "It might be dangerous if it is not regulated by governments.", followUps: ["What is a bigger danger than AI?"] },
+                    { q: "How did you feel about your last written and listening tests?", topic: "Simple Past & Feelings", ans: "I felt confident about the written test but nervous about the listening part.", followUps: ["What do you need to study more?", "What helps you relax before a test?"] },
+                ],
+                followUps: ["Why the 1920s specifically?", "What kind of project was it?", "Who was the celebrity you saw?"],
+            },
+            'Junior 1': {
+                cefr_tag: 'B1/B2 Low',
+                range: 'B1/B2 Low',
+                is_coming_soon: true,
+                questions: [
+                    { q: "Who’s your hero? Why do you admire this person?", topic: "Describing People / Adjectives", ans: "My hero is my grandmother because she is very strong and resilient." },
+                    { q: "If you won the lottery, what would you do?", topic: "Second Conditional", ans: "If I won the lottery, I would buy a small farm and travel the world." },
+                    { q: "What do you think will happen to technology in the next 20 years?", topic: "Future Predictions (Will)", ans: "I think technology will completely transform education and work." },
+                ],
+                followUps: ["What qualities make a person a true hero?", "What is the first country you would visit?", "In what ways will education change?"],
+            },
+            'Junior 2': {
+                cefr_tag: 'B2 Low',
+                range: 'B2 Low',
+                is_coming_soon: true,
+                questions: [
+                    { q: "Have you ever heard about a crime in the news? What happened?", topic: "Narrating Events / Vocabulary", ans: "Yes, I read about a bank that was robbed last week. The thieves were caught later." },
+                    { q: "What’s something that’s right for you but wrong for others?", topic: "Abstract Concepts / Ethics", ans: "I think watching movies with subtitles is right for me, but some people find it distracting." },
+                    { q: "What would you have done differently in your last job interview?", topic: "Past Modals", ans: "I should have researched the company's culture better before going to the interview." },
+                ],
+                followUps: ["How did the authorities manage to catch them?", "Is it ever okay to do something 'wrong' for a 'right' reason?", "What specific aspect of the culture should you have researched?"],
+            },
+            'Senior 1': {
+                cefr_tag: 'High B2',
+                range: 'B2',
+                is_coming_soon: true,
+                questions: [
+                    { q: "Tell me about something you regret from last year.", topic: "Reported Speech / Regret", ans: "I regret that I didn't travel more. If I had known, I would have planned a trip." },
+                    { q: "Tell me something one of your parents said that you remember until this day.", topic: "Reported Speech / Family", ans: "My father once told me to never give up on my dreams, which I always remember." },
+                    { q: "How long have you been studying English? What challenges have you faced?", topic: "Present Perfect Continuous", ans: "I have been studying English for five years, and the biggest challenge has been mastering phrasal verbs." },
+                ],
+                followUps: ["How can we avoid future regrets?", "What's the best piece of advice you've ever received?", "What is one phrasal verb you found particularly difficult?"],
+            },
+            'Senior 2': {
+                cefr_tag: 'B2 / Low C1',
+                range: 'C1',
+                is_coming_soon: true,
+                questions: [
+                    { q: "If you had studied more, how would your life be now?", topic: "Third / Mixed Conditionals", ans: "If I had studied architecture, I would be working in São Paulo right now." },
+                    { q: "Would you rather live in a big city or in the countryside? Why?", topic: "Expressing Preferences / Rationale", ans: "I'd rather live in the countryside because I appreciate the peaceful atmosphere, although I would miss the city's amenities." },
+                    { q: "What should be done to combat climate change?", topic: "Passive Voice / Social Issues", ans: "More aggressive policies must be implemented by governments, and renewable energy should be prioritized." },
+                ],
+                followUps: ["What is the biggest sacrifice you've made for your career?", "How does the atmosphere influence productivity?", "What specific policy do you think is most urgent?"],
+            },
+        };
+
+        // --- DOM ELEMENTS ---
+        const loginGate = document.getElementById('login-gate');
+        const passwordInput = document.getElementById('password-input');
+        const loginFeedback = document.getElementById('login-feedback');
+        const dashboardView = document.getElementById('dashboard-view');
+        const generatorView = document.getElementById('generator-view');
+        const cardsContainer = document.getElementById('level-cards-container');
+        const currentLevelDisplay = document.getElementById('current-level-display');
+        const mainQuestion = document.getElementById('main-question');
+        const exampleAnswerContainer = document.getElementById('example-answer-container');
+        const exampleAnswer = document.getElementById('example-answer');
+        const followUpContainer = document.getElementById('follow-up-container');
+        const followUpList = document.getElementById('follow-up-list');
+        const eyeSvg = document.getElementById('eye-svg'); 
+        
+        // --- LOGIN FUNCTION ---
+
+        window.checkPassword = function(event) {
+            event.preventDefault();
+            const password = passwordInput.value.toLowerCase().trim();
+            const correctPassword = "italiano"; 
+            
+            if (password === correctPassword) {
+                loginGate.style.display = 'none'; 
+                document.getElementById('main-wrapper').classList.remove('hidden');
+                loginFeedback.classList.add('hidden');
+                renderLevelCards();
+            } else {
+                loginFeedback.textContent = "Palavra-passe incorreta. Tente novamente!";
+                loginFeedback.classList.remove('hidden');
+                passwordInput.value = '';
             }
-        }
-
-        function setupFirestoreListeners(appId) {
-            // Limpa listeners antigos para evitar duplicação
-            if (unsubscribeTasks) unsubscribeTasks();
-            if (unsubscribeCampaigns) unsubscribeCampaigns();
-            if (unsubscribeCalendar) unsubscribeCalendar();
-
-            // Caminhos das coleções públicas
-            const tasksCollection = collection(db, `artifacts/${appId}/public/data/tasks`);
-            const campaignsCollection = collection(db, `artifacts/${appId}/public/data/campaigns`);
-            const calendarCollection = collection(db, `artifacts/${appId}/public/data/calendarEvents`);
-
-            // Listener para Tarefas
-            const tasksQuery = query(tasksCollection, orderBy("deadline", "asc"));
-            unsubscribeTasks = onSnapshot(tasksQuery, (snapshot) => {
-                tasks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                // Re-renderiza a seção de tarefas se estiver visível
-                if (document.getElementById('task-list-container')) {
-                    renderTarefasSection();
-                }
-            });
-
-            // Listener para Campanhas
-            const campaignsQuery = query(campaignsCollection, orderBy("createdAt", "desc"));
-            unsubscribeCampaigns = onSnapshot(campaignsQuery, (snapshot) => {
-                campaigns = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                if (document.querySelector('.campaign-card')) {
-                     renderCampanhasSection();
-                }
-            });
-
-            // Listener para Calendário
-            const calendarQuery = query(calendarCollection, orderBy("createdAt", "desc"));
-            unsubscribeCalendar = onSnapshot(calendarQuery, (snapshot) => {
-                calendarEvents = {}; // Reseta para reconstruir
-                snapshot.docs.forEach(doc => {
-                    const event = { id: doc.id, ...doc.data() };
-                    if (!calendarEvents[event.date]) {
-                        calendarEvents[event.date] = [];
-                    }
-                    calendarEvents[event.date].push(event);
-                });
-                if (document.getElementById('calendar-wrapper')) {
-                    renderCalendarioSection();
-                }
-            });
         }
         
-        // --- DADOS MOCKADOS (FALLBACK) ---
-        let kpiData, personasData;
-        function loadMockData() {
-            kpiData = {
-                novosLeads: { valor: "1,280", variacao: "+15%" },
-                taxaConversao: { valor: "4.7%", variacao: "+0.5%" },
-                engajamentoSocial: { valor: "12.3K", variacao: "-2%" },
-                custoAquisicao: { valor: "R$ 25,40", variacao: "+5%" }
-            };
-            personasData = [ /* ... dados das personas ... */ ];
+        // --- FUNÇÕES DE NAVEGAÇÃO ---
+
+        function showDashboard() {
+            dashboardView.classList.remove('hidden');
+            generatorView.classList.add('hidden');
+            currentLevel = null;
+            questionsPool = []; // Limpa o pool ao voltar
         }
 
+        window.openQuestionGenerator = function(level) {
+            currentLevel = level;
+            const levelInfo = levelData[level].cefr_tag ? `${level} (${levelData[level].cefr_tag})` : level;
+            currentLevelDisplay.textContent = levelInfo;
+            dashboardView.classList.add('hidden');
+            generatorView.classList.remove('hidden');
+            
+            questionsPool = [...levelData[level].questions];
+            
+            exampleAnswerContainer.classList.add('hidden');
+            followUpContainer.classList.add('hidden');
 
-        // --- FUNÇÕES DE RENDERIZAÇÃO (MODIFICADAS) ---
-
-        function showHeader() {
-            mainHeader.classList.remove('hidden');
+            generateRandomQuestion();
         }
+        
+        // --- FUNÇÕES DO GERADOR ---
+        
+        /**
+         * Alterna a visibilidade da pergunta principal, aplicando um efeito de blur.
+         */
+        window.toggleQuestionVisibility = function() {
+            if (!eyeSvg || !mainQuestion) return;
 
-        function setActiveNavItem(element) {
-            document.querySelectorAll('#main-navigation .nav-item').forEach(item => {
-                item.classList.remove('active', 'active-parent');
-            });
-            if (element) {
-                element.classList.add('active');
-                const parentDropdown = element.closest('.nav-dropdown');
-                if (parentDropdown) {
-                    parentDropdown.querySelector('.dropdown-toggle').classList.add('active-parent');
-                }
+            // Se o conteúdo principal for o placeholder de reinício, não faz nada.
+            if (mainQuestion.textContent.startsWith("Todas as perguntas foram utilizadas")) {
+                return;
+            }
+
+            isQuestionVisible = !isQuestionVisible;
+
+            if (!isQuestionVisible) {
+                // Ocultar (Aplicar Blur)
+                mainQuestion.classList.add('question-blurred');
+                eyeSvg.innerHTML = eyeOffPath;
+                eyeSvg.classList.add('text-red-500');
+            } else {
+                // Revelar (Remover Blur)
+                mainQuestion.classList.remove('question-blurred');
+                eyeSvg.innerHTML = eyeOpenPath; 
+                eyeSvg.classList.remove('text-red-500');
             }
         }
 
-        function renderInicioSection() {
-            showHeader();
-            document.getElementById('main-title').textContent = 'Dashboard de Marketing';
-            document.getElementById('main-description').textContent = 'Visão geral dos principais indicadores e atividades da equipe.';
-            
-            contentArea.innerHTML = `
-                <section>
-                    <!-- KPIs -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="kpi-card kpi-card-blue">
-                            <h3 class="text-stone-600 font-semibold mb-2">Novos Leads (Mês)</h3>
-                            <p class="text-4xl font-bold text-stone-800">${kpiData.novosLeads.valor}</p>
-                            <p class="text-green-600 font-semibold mt-1">${kpiData.novosLeads.variacao}</p>
-                        </div>
-                        <div class="kpi-card kpi-card-purple">
-                            <h3 class="text-stone-600 font-semibold mb-2">Taxa de Conversão</h3>
-                            <p class="text-4xl font-bold text-stone-800">${kpiData.taxaConversao.valor}</p>
-                            <p class="text-green-600 font-semibold mt-1">${kpiData.taxaConversao.variacao}</p>
-                        </div>
-                        <div class="kpi-card kpi-card-orange">
-                            <h3 class="text-stone-600 font-semibold mb-2">Engajamento Social</h3>
-                            <p class="text-4xl font-bold text-stone-800">${kpiData.engajamentoSocial.valor}</p>
-                            <p class="text-red-600 font-semibold mt-1">${kpiData.engajamentoSocial.variacao}</p>
-                        </div>
-                        <div class="kpi-card kpi-card-yellow">
-                            <h3 class="text-stone-600 font-semibold mb-2">Custo por Aquisição</h3>
-                            <p class="text-4xl font-bold text-stone-800">${kpiData.custoAquisicao.valor}</p>
-                            <p class="text-red-600 font-semibold mt-1">${kpiData.custoAquisicao.variacao}</p>
-                        </div>
-                    </div>
-
-                    <!-- Campanhas Ativas e Avisos -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                            <h3 class="text-lg font-semibold mb-4 text-stone-800">Campanhas Ativas</h3>
-                            <div class="space-y-4">
-                                ${campaigns.filter(c => c.status === 'Ativa').map(c => `
-                                    <div>
-                                        <p class="font-bold text-stone-700">${c.nome}</p>
-                                        <p class="text-sm text-stone-500">Responsável: ${c.responsavel}</p>
-                                    </div>
-                                `).join('') || '<p class="text-stone-500">Nenhuma campanha ativa no momento.</p>'}
-                            </div>
-                        </div>
-                        <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
-                            <h3 class="text-lg font-semibold mb-4 text-stone-800">Avisos da Equipe</h3>
-                            <p class="text-stone-600">Reunião de alinhamento semanal movida para terça-feira, às 10h. Por favor, atualizem suas agendas.</p>
-                        </div>
-                    </div>
-                </section>
-            `;
-            if (currentChart) currentChart.destroy();
-        }
-
-        function renderCampanhasSection() {
-            showHeader();
-            document.getElementById('main-title').textContent = 'Gestor de Campanhas';
-            document.getElementById('main-description').textContent = 'Acompanhe o status e os resultados de todas as campanhas de marketing.';
-            
-            contentArea.innerHTML = `
-                <div class="text-right mb-6">
-                    <button class="primary-btn" onclick="openCampaignForm()">+ Adicionar Campanha</button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    ${campaigns.map((campaign) => {
-                        let statusClass = '';
-                        switch(campaign.status) {
-                            case 'Ativa': statusClass = 'status-active'; break;
-                            case 'Planejada': statusClass = 'status-planned'; break;
-                            case 'Concluída': statusClass = 'status-completed'; break;
-                        }
-                        return `
-                        <div class="campaign-card cursor-pointer hover:shadow-lg hover:border-[#F1D24B] transition-all" onclick="openCampaignModal('${campaign.id}')">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-xl font-bold text-stone-800">${campaign.nome}</h3>
-                                <span class="status-tag ${statusClass}">${campaign.status}</span>
-                            </div>
-                            <p class="text-sm text-stone-500 mb-4">Responsável: ${campaign.responsavel}</p>
-                            <div class="bg-stone-50 p-3 rounded-lg">
-                                <p class="text-sm font-semibold text-stone-700">Objetivo:</p>
-                                <p class="text-sm text-stone-600">${campaign.objetivo}</p>
-                            </div>
-                        </div>
-                        `
-                    }).join('') || '<p class="text-stone-500 col-span-full text-center">Nenhuma campanha cadastrada.</p>'}
-                </div>
-            `;
-            if (currentChart) currentChart.destroy();
-        }
-
-        function renderTarefasSection() {
-            showHeader();
-            document.getElementById('main-title').textContent = 'Lista de Tarefas';
-            document.getElementById('main-description').textContent = 'Gerencie e acompanhe as tarefas da equipe de marketing.';
-            if (currentChart) currentChart.destroy();
-            
-            const assignees = [...new Set(tasks.flatMap(task => task.assignedTo))];
-
-            contentArea.innerHTML = `
-                <section>
-                    <div class="flex justify-between items-center mb-6">
-                        <div id="task-filters" class="flex flex-col sm:flex-row flex-wrap gap-4 bg-white p-4 rounded-lg shadow-sm items-center">
-                            <div class="flex-grow">
-                                <label for="person-filter" class="text-sm font-medium text-stone-600 mr-2">Filtrar por:</label>
-                                <select id="person-filter" class="p-2 border border-stone-300 rounded-md">
-                                    <option value="all">Todos</option>
-                                    ${assignees.map(name => `<option value="${name}">${name}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div id="deadline-filters" class="flex gap-2">
-                                <button class="filter-btn active" data-filter="all">Todos</button>
-                                <button class="filter-btn" data-filter="nearest">Prazo Próximo</button>
-                                <button class="filter-btn" data-filter="overdue">Vencidas</button>
-                            </div>
-                        </div>
-                        <button class="primary-btn" onclick="openTaskForm()">+ Adicionar Tarefa</button>
-                    </div>
-                    <div id="task-list-container" class="space-y-4">
-                        <!-- As tarefas serão renderizadas aqui pelo JavaScript -->
-                    </div>
-                </section>
-            `;
-
-            function updateTaskList() {
-                const personFilter = document.getElementById('person-filter').value;
-                const deadlineFilter = document.querySelector('#deadline-filters .filter-btn.active').dataset.filter;
-                
-                let filteredTasks = [...tasks];
-
-                if (personFilter !== 'all') {
-                    filteredTasks = filteredTasks.filter(task => task.assignedTo.includes(personFilter));
-                }
-
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-
-                if (deadlineFilter === 'overdue') {
-                    filteredTasks = filteredTasks.filter(task => new Date(task.deadline) < today);
-                } else if (deadlineFilter === 'nearest') {
-                    filteredTasks = filteredTasks
-                        .filter(task => new Date(task.deadline) >= today)
-                        .sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-                } else {
-                    filteredTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
-                }
-
-                const taskListContainer = document.getElementById('task-list-container');
-                if (filteredTasks.length === 0) {
-                    taskListContainer.innerHTML = `<div class="text-center p-8 bg-white rounded-lg"><p class="text-stone-500">Nenhuma tarefa encontrada com os filtros selecionados.</p></div>`;
-                    return;
-                }
-                
-                taskListContainer.innerHTML = filteredTasks.map(task => {
-                    const deadlineDate = new Date(task.deadline);
-                    const isOverdue = deadlineDate < today;
-                    const deadlineClass = isOverdue ? 'deadline-overdue' : '';
-                    const formattedDate = deadlineDate.toLocaleDateString('pt-BR', { timeZone: 'UTC', day: '2-digit', month: '2-digit', year: 'numeric' });
-
-                    return `
-                        <div class="task-card">
-                            <p class="text-stone-700 flex-1">${task.description}</p>
-                            <div class="flex items-center gap-4">
-                                <div class="flex items-center">
-                                    ${task.assignedTo.map(name => `<span class="assignee-tag tag-${name.toLowerCase()}">${name}</span>`).join('')}
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-xs text-stone-500">Prazo</span>
-                                    <p class="deadline-text ${deadlineClass}">${formattedDate}</p>
-                                </div>
-                                <button class="delete-btn" onclick="deleteTask('${task.id}')">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+        /**
+         * Gera uma pergunta aleatória para o nível atualmente selecionado, garantindo que não haja repetição 
+         * até que o ciclo de perguntas termine.
+         */
+        window.generateRandomQuestion = function() {
+            if (!currentLevel || !levelData[currentLevel]) {
+                mainQuestion.textContent = "Erro: Nível não selecionado.";
+                currentQuestion = null;
+                exampleAnswerContainer.classList.add('hidden');
+                followUpContainer.classList.add('hidden');
+                return;
             }
 
-            document.getElementById('person-filter').addEventListener('change', updateTaskList);
-            document.querySelectorAll('#deadline-filters .filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelector('#deadline-filters .filter-btn.active').classList.remove('active');
-                    btn.classList.add('active');
-                    updateTaskList();
-                });
-            });
+            // Verifica se o pool de perguntas acabou. Se sim, reinicia o ciclo.
+            if (questionsPool.length === 0) {
+                 questionsPool = [...levelData[currentLevel].questions];
+                 
+                 mainQuestion.textContent = "Todas as perguntas foram utilizadas. O ciclo foi reiniciado. Clique novamente para gerar.";
+                 currentQuestion = null;
+                 exampleAnswerContainer.classList.add('hidden');
+                 followUpContainer.classList.add('hidden');
+                 
+                 // Garante que o olho está aberto e sem blur ao reiniciar o ciclo
+                 isQuestionVisible = true;
+                 mainQuestion.classList.remove('question-blurred');
+                 if (eyeSvg) {
+                    eyeSvg.innerHTML = eyeOpenPath;
+                    eyeSvg.classList.remove('text-red-500');
+                 }
 
-            updateTaskList();
-        }
-
-        function renderCalendarioSection() {
-            showHeader();
-            document.getElementById('main-title').textContent = 'Calendário de Conteúdo';
-            document.getElementById('main-description').textContent = 'Planeje e visualize todas as publicações de redes sociais, blog, email e vídeo em um formato semanal.';
+                 return;
+            }
             
-            if (currentChart) currentChart.destroy();
+            const randomIndex = Math.floor(Math.random() * questionsPool.length);
+            currentQuestion = questionsPool[randomIndex];
+            questionsPool.splice(randomIndex, 1); 
 
-            const weekStarts = [
-                new Date('2025-06-30T03:00:00Z'),
-                new Date('2025-07-07T03:00:00Z')
-            ];
+            // NOVO: Força a visibilidade da nova pergunta e remove blur
+            isQuestionVisible = true;
+            mainQuestion.classList.remove('question-blurred');
+            if (eyeSvg) {
+                eyeSvg.innerHTML = eyeOpenPath;
+                eyeSvg.classList.remove('text-red-500');
+            }
 
-            let finalHtml = '';
-            weekStarts.forEach((startDate, index) => {
-                finalHtml += generateWeekHtml(startDate, `Semana ${index + 1}`);
-            });
-
-            contentArea.innerHTML = finalHtml;
+            mainQuestion.textContent = currentQuestion.q;
+            
+            exampleAnswerContainer.classList.add('hidden');
+            followUpContainer.classList.add('hidden');
+            
+            console.log(`Perguntas restantes no pool para ${currentLevel}: ${questionsPool.length}`);
         }
 
-        function generateWeekHtml(startDate, weekTitle) {
-            const daysOfWeek = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'];
-            const monthNames = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-            let weekGridHtml = '';
+        /**
+         * Alterna a visibilidade da resposta modelo.
+         */
+        window.showExampleAnswer = function() {
+            if (!currentQuestion) {
+                exampleAnswer.textContent = "Por favor, gere uma pergunta primeiro.";
+                exampleAnswerContainer.classList.remove('hidden');
+                followUpContainer.classList.add('hidden');
+                return;
+            }
 
-            const endDate = new Date(startDate);
-            endDate.setDate(startDate.getDate() + 6);
+            if (exampleAnswerContainer.classList.contains('hidden')) {
+                exampleAnswer.textContent = currentQuestion.ans || "Resposta modelo não cadastrada (placeholder).";
+                exampleAnswerContainer.classList.remove('hidden');
+            } else {
+                exampleAnswerContainer.classList.add('hidden');
+            }
+            followUpContainer.classList.add('hidden'); 
+        }
 
-            for (let i = 0; i < 7; i++) {
-                const day = new Date(startDate);
-                day.setDate(startDate.getDate() + i);
+        /**
+         * Gera e exibe as perguntas de acompanhamento.
+         */
+        window.generateFollowUps = function() {
+            if (!currentQuestion) {
+                followUpList.innerHTML = '<li>Por favor, gere uma pergunta primeiro.</li>';
+                followUpContainer.classList.remove('hidden');
+                exampleAnswerContainer.classList.add('hidden');
+                return;
+            }
+
+            if (followUpContainer.classList.contains('hidden')) {
+                // Tenta usar followUps específicos da pergunta; se não houver, usa os padrões do nível.
+                const followUps = currentQuestion.followUps || levelData[currentLevel].followUps || ["Pergunta de acompanhamento 1 (Placeholder)", "Pergunta de acompanhamento 2 (Placeholder)"];
+                const displayedFollowUps = followUps.slice(0, 3); 
+
+                // Adiciona o Tópico Focado no topo da lista de Follow-Ups (como informação para o professor)
+                const topicDisplay = `<li class="font-bold text-[#F1D24B] mb-2 list-none">Tópico Focado: ${currentQuestion.topic}</li>`;
                 
-                const dateStr = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
-                const posts = calendarEvents[dateStr] || [];
+                followUpList.innerHTML = topicDisplay + displayedFollowUps.map(fu => `<li>${fu}</li>`).join('');
+                
+                followUpContainer.classList.remove('hidden');
+            } else {
+                followUpContainer.classList.add('hidden');
+            }
+            exampleAnswerContainer.classList.add('hidden');
+        }
 
-                const postsHtml = posts.map(post => {
-                    const typeText = post.type.charAt(0).toUpperCase() + post.type.slice(1);
-                    return `
-                        <div class="post-item">
-                            <span class="post-type-tag post-tag-${post.type}">${typeText}</span>
-                            <p class="post-description">${post.description}</p>
-                            <button class="delete-btn" onclick="deleteCalendarEvent('${post.id}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            </button>
-                        </div>
-                    `;
-                }).join('');
+        // --- RENDERIZAÇÃO INICIAL ---
 
-                weekGridHtml += `
-                    <div class="day-card" onclick="openCalendarEventForm('${dateStr}')">
-                        <div class="day-card-header">
-                            <span class="day-name">${daysOfWeek[i]}</span>
-                            <span class="day-number">${day.getDate()}</span>
+        /**
+         * Renderiza os 10 cards de nível no Dashboard.
+         */
+        function renderLevelCards() {
+            cardsContainer.innerHTML = '';
+            
+            const cardDescription = "Este card possui perguntas para a revisão do Oral Test, com assuntos e estruturas gramaticais específicas que podem ser abordadas na avaliação.";
+            const levels = Object.keys(levelData);
+
+            // Código HTML da logo para ser inserido no card
+            const logoHtml = `<img src="https://res.cloudinary.com/dqfi22uz0/image/upload/v1760657894/SLAP_ICON_PRETO_2_2_tv8bmp.png" alt="Logo da Escola" class="absolute top-4 right-4 w-8 h-8 pointer-events-none" onerror="this.style.display='none';" />`;
+            
+            // Ícone do Cadeado (VERMELHO) - #FF5C3D
+            const lockIcon = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FF5C3D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+            `;
+
+
+            levels.forEach(levelName => {
+                const data = levelData[levelName];
+                const isLocked = data.is_coming_soon;
+                
+                const card = document.createElement('div');
+                // Aplica a classe de bloqueio e desabilita o clique se estiver bloqueado
+                card.className = `level-card relative ${isLocked ? 'locked-card-style' : ''}`; 
+                card.setAttribute('onclick', isLocked ? '' : `openQuestionGenerator('${levelName}')`);
+                
+                // Overlay de bloqueio
+                const lockedOverlay = isLocked ? `
+                    <div class="coming-soon-overlay">
+                        ${lockIcon}
+                        <p class="text-sm font-bold uppercase tracking-wider">Em Breve</p>
+                    </div>
+                ` : '';
+
+                // Estrutura do card
+                card.innerHTML = `
+                    ${logoHtml}
+                    ${lockedOverlay}
+                    <div class="h-full flex flex-col justify-between pt-0">
+                        <div>
+                            <span class="cefr-tag">${data.cefr_tag || 'N/A'}</span>
+                            <h3 class="text-2xl font-bold text-stone-800 mb-1">${levelName}</h3>
+                            <p class="text-stone-600 text-sm italic mb-4">
+                                ${cardDescription}
+                            </p>
                         </div>
-                        <div>${postsHtml}</div>
+                        <button class="action-button mt-4 w-full text-sm">
+                            Iniciar Prática
+                        </button>
                     </div>
                 `;
-            }
-
-            return `
-                <div class="week-container">
-                    <h3 class="week-header">${weekTitle}: ${startDate.getDate()} de ${monthNames[startDate.getMonth()]} - ${endDate.getDate()} de ${monthNames[endDate.getMonth()]}</h3>
-                    <div class="week-grid">
-                        ${weekGridHtml}
-                    </div>
-                </div>
-            `;
-        }
-        
-        // --- FUNÇÕES DE INTERAÇÃO COM O BANCO DE DADOS (FIRESTORE) ---
-
-        async function saveTask(event) {
-            event.preventDefault();
-            const form = event.target;
-            const description = form.description.value;
-            const deadline = form.deadline.value;
-            const assignedTo = Array.from(form.assignedTo.selectedOptions).map(option => option.value);
-            
-            if (!description || !deadline || assignedTo.length === 0) {
-                alert("Por favor, preencha todos os campos.");
-                return;
-            }
-
-            try {
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'hub-marketing-slap';
-                await addDoc(collection(db, `artifacts/${appId}/public/data/tasks`), {
-                    description,
-                    deadline,
-                    assignedTo,
-                    createdAt: serverTimestamp()
-                });
-                closeFormModal();
-            } catch (error) {
-                console.error("Erro ao adicionar tarefa: ", error);
-            }
-        }
-
-        async function deleteTask(taskId) {
-            if (confirm("Tem certeza que deseja excluir esta tarefa?")) {
-                try {
-                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'hub-marketing-slap';
-                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/tasks`, taskId));
-                } catch (error) {
-                    console.error("Erro ao excluir tarefa: ", error);
-                }
-            }
-        }
-        
-        async function saveCalendarEvent(event) {
-            event.preventDefault();
-            const form = event.target;
-            const date = form.date.value;
-            const type = form.type.value;
-            const description = form.description.value;
-
-            if (!date || !type || !description) {
-                alert("Por favor, preencha todos os campos.");
-                return;
-            }
-
-            try {
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'hub-marketing-slap';
-                await addDoc(collection(db, `artifacts/${appId}/public/data/calendarEvents`), {
-                    date,
-                    type,
-                    description,
-                    createdAt: serverTimestamp()
-                });
-                closeFormModal();
-            } catch (error) {
-                console.error("Erro ao adicionar evento no calendário: ", error);
-            }
-        }
-
-        async function deleteCalendarEvent(eventId) {
-            event.stopPropagation(); // Impede que o modal de adicionar evento abra
-            if (confirm("Tem certeza que deseja excluir este post?")) {
-                try {
-                    const appId = typeof __app_id !== 'undefined' ? __app_id : 'hub-marketing-slap';
-                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/calendarEvents`, eventId));
-                } catch (error) {
-                    console.error("Erro ao excluir evento do calendário: ", error);
-                }
-            }
-        }
-        
-        // --- FUNÇÕES DE MODAL ---
-        function openTaskForm() {
-            const modalTitle = document.getElementById('form-modal-title');
-            const modalBody = document.getElementById('form-modal-body');
-            
-            modalTitle.textContent = "Adicionar Nova Tarefa";
-            modalBody.innerHTML = `
-                <div>
-                    <label for="description" class="block text-sm font-medium text-stone-700">Descrição</label>
-                    <input type="text" id="description" name="description" class="form-input mt-1" required>
-                </div>
-                <div>
-                    <label for="deadline" class="block text-sm font-medium text-stone-700">Prazo Final</label>
-                    <input type="date" id="deadline" name="deadline" class="form-input mt-1" required>
-                </div>
-                <div>
-                    <label for="assignedTo" class="block text-sm font-medium text-stone-700">Atribuir para (segure Ctrl/Cmd para selecionar vários)</label>
-                    <select id="assignedTo" name="assignedTo" class="form-input mt-1" multiple required>
-                        <option value="Ana">Ana</option>
-                        <option value="Bruno">Bruno</option>
-                        <option value="Carla">Carla</option>
-                        <option value="Daniel">Daniel</option>
-                    </select>
-                </div>
-                <div class="text-right">
-                    <button type="submit" class="primary-btn">Salvar Tarefa</button>
-                </div>
-            `;
-            modalBody.onsubmit = saveTask;
-            document.getElementById('form-modal').classList.add('visible');
-        }
-
-        function openCalendarEventForm(date) {
-            const modalTitle = document.getElementById('form-modal-title');
-            const modalBody = document.getElementById('form-modal-body');
-            
-            modalTitle.textContent = `Adicionar Post para ${new Date(date + 'T03:00:00Z').toLocaleDateString('pt-BR')}`;
-            modalBody.innerHTML = `
-                <input type="hidden" name="date" value="${date}">
-                <div>
-                    <label for="type" class="block text-sm font-medium text-stone-700">Tipo de Post</label>
-                    <select id="type" name="type" class="form-input mt-1" required>
-                        <option value="stories">Stories</option>
-                        <option value="reels">Reels</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="youtube">YouTube</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="description" class="block text-sm font-medium text-stone-700">Descrição do Post</label>
-                    <input type="text" id="description" name="description" class="form-input mt-1" required>
-                </div>
-                <div class="text-right">
-                    <button type="submit" class="primary-btn">Salvar Post</button>
-                </div>
-            `;
-            modalBody.onsubmit = saveCalendarEvent;
-            document.getElementById('form-modal').classList.add('visible');
-        }
-
-
-        function closeFormModal() {
-            document.getElementById('form-modal').classList.remove('visible');
+                cardsContainer.appendChild(card);
+            });
         }
 
         // --- INICIALIZAÇÃO ---
-        document.addEventListener('DOMContentLoaded', () => {
-            loadMockData(); // Carrega dados locais como fallback
-            initializeFirebase(); // Inicia o Firebase
+        window.onload = function() {
+            // Garante que o Login Gate está visível e o Main Wrapper escondido
+            document.getElementById('main-wrapper').classList.add('hidden');
+            document.getElementById('login-gate').style.display = 'flex';
             
-            const pageRenderers = {
-                'inicio': renderInicioSection,
-                'campanhas': renderCampanhasSection,
-                'tarefas': renderTarefasSection,
-                'calendario': renderCalendarioSection,
-                // ... outras seções ...
-            };
-
-            const mainNav = document.getElementById('main-navigation');
-            mainNav.addEventListener('click', (event) => {
-                const target = event.target.closest('.nav-item');
-                if (!target) return;
-
-                if (target.classList.contains('dropdown-toggle')) {
-                    const dropdown = target.closest('.nav-dropdown');
-                    const submenu = dropdown.querySelector('.submenu');
-                    const arrow = target.querySelector('.dropdown-arrow');
-                    submenu.classList.toggle('open');
-                    arrow.classList.toggle('rotate-180');
-                    return;
-                }
-
-                const pageKey = target.dataset.target;
-                if (pageKey && pageRenderers[pageKey]) {
-                    pageRenderers[pageKey]();
-                    setActiveNavItem(target);
-                }
-            });
-
-            // Renderização inicial (será com dados de fallback até o Firebase carregar)
-            renderInicioSection();
-            setActiveNavItem(document.querySelector('[data-target="inicio"]'));
-        });
-
-        // Expor funções ao escopo global para serem chamadas pelo HTML
-        window.openTaskForm = openTaskForm;
-        window.deleteTask = deleteTask;
-        window.openCalendarEventForm = openCalendarEventForm;
-        window.deleteCalendarEvent = deleteCalendarEvent;
-        window.closeFormModal = closeFormModal;
-
+            // Inicializa o SVG do olho com o estado inicial (caso o JS seja executado antes do HTML)
+            if (eyeSvg) {
+                eyeSvg.innerHTML = eyeOpenPath;
+            }
+        };
     </script>
 </body>
 </html>
