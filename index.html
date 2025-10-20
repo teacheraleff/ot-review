@@ -194,7 +194,25 @@
         .login-button:hover {
             background-color: #eab308;
         }
-
+        
+        /* Estilo para a nova área de anotações (textarea) */
+        #notes-area {
+            resize: vertical;
+            min-height: 150px;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: inherit; /* Mantém a fonte DM Sans */
+            font-size: 1rem;
+            color: #44403c;
+            width: 100%;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.2s;
+        }
+        #notes-area:focus {
+            outline: none;
+            border-color: #84c7df; /* Azul SLAP no foco */
+        }
     </style>
 </head>
 <body>
@@ -213,7 +231,7 @@
                     type="password" 
                     id="password-input" 
                     class="login-input" 
-                    placeholder="Ex: inglês" 
+                    placeholder="Ex: italiano" 
                     required
                 >
                 <button type="submit" class="login-button">
@@ -279,7 +297,7 @@
                         </ul>
                     </div>
                 </div>
-
+                
                 <!-- BOTÕES DE AÇÃO --><div class="mt-8 flex flex-col sm:flex-row gap-4 justify-between">
                     <!-- Botão Secundário (See Example Answer) - ICONE 30X30 --><button class="secondary-button w-full sm:w-auto" onclick="showExampleAnswer()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
@@ -294,6 +312,24 @@
                         Gerar Nova Pergunta
                     </button>
                 </div>
+                
+                <!-- NOVO: ÁREA DE ANOTAÇÕES RÁPIDAS (TEXTAREA) -->
+                <div id="notes-wrapper" class="mt-8 space-y-4">
+                    <h3 class="text-xl font-semibold text-stone-700 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-500"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+                        Anotações Rápidas
+                    </h3>
+                    <textarea id="notes-area" placeholder="Use este espaço para digitar correções, vocabulário novo ou exemplos durante a prática oral."></textarea>
+                    
+                    <!-- Botão para Limpar Anotações (Opcional, mas útil) -->
+                    <button class="secondary-button text-sm bg-red-500 hover:bg-red-600" onclick="document.getElementById('notes-area').value = ''">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                        Limpar Anotações
+                    </button>
+                </div>
+                <!-- FIM DA ÁREA DE ANOTAÇÕES -->
+
+
             </div>
         </div>
 
@@ -305,7 +341,7 @@
         let questionsPool = []; // Pool de perguntas restantes na sessão atual (evita repetição)
         let currentQuestion = null; // PERGUNTA ATUALMENTE EXIBIDA
         let isQuestionVisible = true; // Estado da visibilidade
-
+        
         // Icon Paths (Lucide Icons SVG)
         const eyeOpenPath = `<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>`; 
         const eyeOffPath = `<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.04 13.04 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/>`;
@@ -364,7 +400,7 @@
                     { q: "Describe your house or apartment for me.", topic: "Furniture & Parts of the House", ans: "My apartment is small, but it has a big kitchen and a comfortable sofa.", followUps: ["What furniture is in your bedroom?", "Do you help with the chores?"] },
                     { q: "What household chores do you usually do?", topic: "Furniture & Chores", ans: "I have to wash the dishes and clean the floor.", followUps: ["Do you agree that cleaning is boring?", "Who helps you with the chores?"] },
                     { q: "Who do you live with? What does this person look like?", topic: "Describing People & Family", ans: "I live with my mother. She is tall, has short hair, and is very kind.", followUps: ["Is she patient?", "What is her favorite color?"] },
-                    { q: "What kind of movies do you like?", topic: "Movie Genres", ans: "I like action movies and comedies.", followUps: ["Who is your favorite actor?", "Do you prefer watching movies at home or in the cinema?"] },
+                    { q: "What kind of movies do you like?", topic: "Movie Genres", ans: "I like action movies and comedies.", followUps: ["Who is your favorite actor?", "Do you prefer watching movies at home or in in the cinema?"] },
                     { q: "Do you like movies about superheroes or do you prefer romantic ones?", topic: "Movie Genres & Likes/Dislikes", ans: "I prefer superhero movies because romantic movies are boring.", followUps: ["What movie genre do you hate?", "Who do you usually watch movies with?"] },
                 ],
                 followUps: ["Who do you usually go to the park with?", "What's your favourite room in the house?", "Do you cook your favorite dish?"],
@@ -421,7 +457,7 @@
                     { q: "Do you get along well with that person (the person you look like)?", topic: "Relationships & Family", ans: "Yes, I get along very well with my mother. We talk every day.", followUps: ["Do you argue often?", "What do you do together?"] },
                     { q: "Do you think fast when you’re in a stressful situation?", topic: "Opinions & Description", ans: "Yes, I think fast, but sometimes I get too nervous.", followUps: ["What is a common stressful situation for you?", "What do you do to relax?"] },
                 ],
-                followUps: ["What kind of food did you use to hate?", "Which country has the best food, in your opinion?", "Which city are you going to live in Canada?"],
+                followUps: ["What kind of food did you use to hate?", "Which country has the best food, in our opinion?", "Which city are you going to live in Canada?"],
             },
             'Sophomore 1': {
                 cefr_tag: 'Low B1',
@@ -508,7 +544,7 @@
                     { q: "Tell me something one of your parents said that you remember until this day.", topic: "Reported Speech / Family", ans: "My father once told me to never give up on my dreams, which I always remember." },
                     { q: "How long have you been studying English? What challenges have you faced?", topic: "Present Perfect Continuous", ans: "I have been studying English for five years, and the biggest challenge has been mastering phrasal verbs." },
                 ],
-                followUps: ["How can we avoid future regrets?", "What's the best piece of advice you've ever received?", "What is one phrasal verb you found particularly difficult?"],
+                followUps: ["How can we avoid future regrets?", "What's the best piece de advice you've ever received?", "What is one phrasal verb you found particularly difficult?"],
             },
             'Senior 2': {
                 cefr_tag: 'B2 / Low C1',
@@ -519,7 +555,7 @@
                     { q: "Would you rather live in a big city or in the countryside? Why?", topic: "Expressing Preferences / Rationale", ans: "I'd rather live in the countryside because I appreciate the peaceful atmosphere, although I would miss the city's amenities." },
                     { q: "What should be done to combat climate change?", topic: "Passive Voice / Social Issues", ans: "More aggressive policies must be implemented by governments, and renewable energy should be prioritized." },
                 ],
-                followUps: ["What is the biggest sacrifice you've made for your career?", "How does the atmosphere influence productivity?", "What specific policy do you think is most urgent?"],
+                followUps: ["What is the biggest sacrifice you've made for your career?", "How does the atmosphere influence productivity?", "What specific policy do you think é mais urgente?"],
             },
         };
 
@@ -538,7 +574,7 @@
         const followUpList = document.getElementById('follow-up-list');
         const eyeSvg = document.getElementById('eye-svg'); 
         
-        // --- LOGIN FUNCTION ---
+        // --- FUNÇÃO LOGIN ---
 
         window.checkPassword = function(event) {
             event.preventDefault();
@@ -551,7 +587,7 @@
                 loginFeedback.classList.add('hidden');
                 renderLevelCards();
             } else {
-                loginFeedback.textContent = "Palavra-passe incorreta. Tente novamente!";
+                loginFeedback.textContent = "Senha incorreta. Tente novamente!";
                 loginFeedback.classList.remove('hidden');
                 passwordInput.value = '';
             }
@@ -577,7 +613,7 @@
             
             exampleAnswerContainer.classList.add('hidden');
             followUpContainer.classList.add('hidden');
-
+            
             generateRandomQuestion();
         }
         
@@ -716,6 +752,7 @@
          * Renderiza os 10 cards de nível no Dashboard.
          */
         function renderLevelCards() {
+            const cardsContainer = document.getElementById('level-cards-container');
             cardsContainer.innerHTML = '';
             
             const cardDescription = "Este card possui perguntas para a revisão do Oral Test, com assuntos e estruturas gramaticais específicas que podem ser abordadas na avaliação.";
@@ -778,6 +815,7 @@
             document.getElementById('login-gate').style.display = 'flex';
             
             // Inicializa o SVG do olho com o estado inicial (caso o JS seja executado antes do HTML)
+            const eyeSvg = document.getElementById('eye-svg');
             if (eyeSvg) {
                 eyeSvg.innerHTML = eyeOpenPath;
             }
